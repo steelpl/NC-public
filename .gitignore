@@ -10,3 +10,14 @@ identifiability_results/
 *.mex*
 .DS_Store
 Thumbs.db
+
+# Commit only the compact public gallery; raw runs and workspaces stay local.
+!figures/
+figures/*
+!figures/*.png
+!figures/*.pdf
+!figures/*.md
+!figures/*.json
+!figures/tables/
+figures/tables/*
+!figures/tables/*.csv

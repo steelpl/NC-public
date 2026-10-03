@@ -1,0 +1,47 @@
+{
+  "seed": 2.0260917E+7,
+  "nMC": 500,
+  "p": 3,
+  "nTrain": 1095,
+  "nTest": 1095,
+  "burnIn": 1000,
+  "errorAR": 0.5,
+  "stationaryTruthAR": 0.8,
+  "slowTruthAR": 0.95,
+  "fastTruthAR": 0.4,
+  "annualPeriod": 365,
+  "SNRdB": [
+    0.1,
+    3,
+    10
+  ],
+  "baseErrorCorrelation": [
+    0,
+    0.4,
+    0.99
+  ],
+  "signalErrorCorrelation": [
+    0,
+    0.3
+  ],
+  "relativeErrorVariance": [
+    0.5,
+    1,
+    1.5
+  ],
+  "truthTypes": [
+    "stationary_AR",
+    "seasonal_multiscale"
+  ],
+  "gains": [
+    1,
+    1,
+    1
+  ],
+  "ciMethod": "Monte Carlo mean +/- 1.96 SE; rates Wilson 95%",
+  "ncOptions": {
+    "nStarts": 3,
+    "nRandomStarts": 0
+  },
+  "mergeRule": "Identical default revised WA PSD projection + SPD floor for every estimator"
+}

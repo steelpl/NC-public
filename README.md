@@ -2,7 +2,7 @@
 
 MATLAB code for **N-Tuple Collocation for Reference-Free Uncertainty Estimation from Multi-Source Hydrological Data: Beyond Triple Collocation and Three-Cornered Hat**, by Hung T. Pham and Seokhyeon Kim.
 
-The repository includes scripts for reproducing the synthetic covariance experiments, TC–NC and TCH–NC comparisons, NC sensitivity tests, downstream weighted-averaging experiments, graphical abstract, and supplementary feasibility diagnostics. All input samples are generated internally. The repository contains code only; experiment outputs are generated locally.
+The repository includes scripts for reproducing the synthetic covariance experiments, TC–NC and TCH–NC comparisons, NC sensitivity tests, downstream weighted-averaging experiments, graphical abstract, and supplementary feasibility diagnostics. All input samples are generated internally. The repository contains the code, MATLAB-generated figure gallery and compact numeric summaries. Full experiment workspaces remain local under results/.
 
 ## Requirements
 
@@ -38,6 +38,26 @@ This uses 500 replicates for each original experiment and each of the 36 paired 
 
 The options `nMC`, `nSensitivity`, `nLegacy`, `runLegacy`, `makePublicationOutputs`, and `invisibleFigures` are centralized in `Run_All_Synthetic.m`. Changing replication counts or the scientific configuration creates a different experiment.
 
+## Generated figure gallery
+
+[View all MATLAB figures and PDF downloads](figures/README.md). The gallery contains the full current-code production results: 500 main/original-design replicates, 100 sensitivity replicates, and 1,000 supplementary diagnostic pixels. The small CSV tables and run configuration are included; MAT workspaces, logs, editable FIG files and full replicate records remain local.
+
+To calculate and rebuild the gallery:
+
+```matlab
+addpath(pwd,'-begin'); % run this from the repository root
+runInfo = Run_All_Synthetic([],struct('mode','run'));
+cd(runInfo.outputRoot); % record this directory before running the script below
+Figure_Supplementary_NC_PSD_Diagnostic; % script may clear workspace variables
+Export_Public_Figures(pwd,fullfile(pwd,'public_gallery')); % new output folder
+```
+
+`Export_Public_Figures` reads the saved editable figures and summaries. It does not rerun covariance fits. It writes 600-dpi PNG/vector PDF (preserving the original 300-dpi graphical abstract), removes repeated method legends and axes toolbars, and saves source hashes and settings. Supply a new output directory as its second argument when a gallery already exists. These current-code figures can differ from the earlier submitted manuscript figures; the existing submission documents are not overwritten by this run.
+
+![TC–NC comparison](figures/Sim_TC_vs_NC_results.png)
+
+![Independent-test merging](figures/Figure_R2_Heldout_Merging.png)
+
 ## Entry points and output figures
 
 The integrated runner executes the following scripts in isolated stage folders and saves their workspaces and figures. They can also be run individually from a separate output working directory with the repository on the MATLAB path.
@@ -49,13 +69,14 @@ The integrated runner executes the following scripts in isolated stage folders a
 - `run_revision_synthetic(nMC,outDir)`: the additional paired stationary/seasonal experiments with independent training/test samples, known-covariance and equal-weight controls, and raw/PSD diagnostics.
 - `run_revision_identifiability(nMC,outDir)`: exact p=2/p=3 decomposition examples and six-initialization/five-floor sensitivity tests.
 - `Build_Synthetic_Revision_Artifacts(mainDir,sensitivityDir,newOutputDir)`: generates tables and publication figures from completed CSV outputs, without fitting the models again.
+- `Export_Public_Figures(runDir,newOutputDir)`: collects the production figures and compact tables into a public gallery without refitting.
 - `Draw_JoH_Graphical_Abstract(outputDir)`: generates the graphical abstract in PNG, vector PDF, and editable MATLAB FIG. This entry point requires no simulations.
 - `Figure_Supplementary_NC_PSD_Diagnostic.m`: optional original synthetic-pixel PSD diagnostic; `FigS_NC_PSD_Diagnostic.png/pdf`. Its same-sample validation proxy is a numerical diagnostic, distinct from the independent-test merging analysis.
 - `Test_Revision_Core(outputDir)`: 16 numerical checks, including PSD feasibility, decomposition preservation, and weighted-averaging behavior.
 
 All NC experiments call the single current `NC.m` implementation. The four covariance-level scripts retain the original experimental designs, but now use the current NC optimizer and its default residual PSD feasibility map. Their newly calculated values and figures can differ from the originally submitted Figures 1–4. For the historical pre-revision NC implementation and experiment sources, see source commit `1cb6c536a2f67724b4d23942228a6f100c00474e` (8 July 2026) in `steelpl/n-tuple-collocation`; the current file tree contains no separate submitted NC estimator. `WA_Submitted.m` remains the original ridge/backslash WA rule for the covariance-level WA comparison; additional paired experiments use current `WA.m`. TC, TCH and the covariance generator are unchanged from that source. The WA plotting script includes a display-only correction that preserves missing groups and method colors.
 
-The paired experiments call the current `NC.m`/`WA.m`, add unit-gain independent-test comparisons, and retain every attempted realization. Their numerical values answer different experimental questions and should not be interchanged with the original figures. Both estimator implementations are needed to reproduce the original and additional experimental stages without silently changing the baseline.
+The paired experiments call the current `NC.m`/`WA.m`, add unit-gain independent-test comparisons, and retain every attempted realization. Their numerical values answer different experimental questions and should not be interchanged with the original figures. All current stages use NC.m; the covariance-level WA experiment retains WA_Submitted.m, while the paired experiment uses current WA.m.
 
 The paired-experiment figure filenames in `09_publication_artifacts/` are:
 
@@ -86,7 +107,7 @@ Draw_JoH_Graphical_Abstract(fullfile(pwd,'results','graphical_abstract'));
 
 ## Reproducibility and interpretation
 
-The original four scripts use seed 123. The paired suite uses base seed 20260917, and the sensitivity suite uses 20260918, each advanced by replicate index. Core numerical checks use 83955; the optional original PSD diagnostic uses 20260707. Configurations, source snapshots/hashes, all attempts, summaries, stage timings and the validation report are saved in each integrated run. Source snapshots are local outputs, not additional repository content.
+The original four scripts use seed 123. The paired suite uses base seed 20260917, and the sensitivity suite uses 20260918, each advanced by replicate index. Core numerical checks use 83955; the optional original PSD diagnostic uses 20260707. Configurations, source snapshots/hashes, all attempts, summaries, stage timings and the validation report are saved in each integrated run. Full source snapshots remain local. The public gallery records source SHA-256 values and the executed experiment settings.
 
 The paired suite has 36 scenarios, 1095 training and 1095 independent test days, SNR 0.1/3/10 dB, base error correlations 0/0.4/0.99, and signal–error correlation parameters 0/0.3. Accuracy summaries are conditional on available estimates; failure rates retain attempted denominators. Pairwise contrasts use common valid realizations. Confidence intervals quantify Monte Carlo uncertainty across realizations.
 

@@ -1,0 +1,223 @@
+{
+  "runName": "synthetic_20261003_205608_433",
+  "generatedUTC": "2026-10-03T12:26:35Z",
+  "productionReplicationCounts": true,
+  "mainReplicates": 500,
+  "originalDesignReplicates": 500,
+  "sensitivityReplicates": 100,
+  "diagnosticPixels": 1000,
+  "matlabVersion": "25.2.0.3177638 (R2025b) Update 5",
+  "figures": [
+    "Sim_TC_vs_NC_results",
+    "Sim_TCH_vs_NC_results",
+    "Test_NC_Sensitivity_results",
+    "Sim_WA_Comparison",
+    "Figure_R1_Variance_RMSE_alpha_0",
+    "Figure_R1_Variance_RMSE_alpha_0p3",
+    "Figure_R2_Heldout_Merging",
+    "Figure_R3_Stress_Feasibility_and_PSD_Cost",
+    "Figure_R4_Initialization_and_Eigenfloor",
+    "Figure_R4b_Initialization",
+    "Figure_R5_Merging_Controls",
+    "Figure_R6_Paired_Seasonal_Change",
+    "Graphical_Abstract_NC",
+    "FigS_NC_PSD_Diagnostic"
+  ],
+  "formats": [
+    "600 dpi PNG (graphical abstract: original 300 dpi)",
+    "vector PDF"
+  ],
+  "sourceFiles": [
+    {
+      "relativePath": "Run_All_Synthetic.m",
+      "sha256": "757b1f6469da4b304d00d451853d1c9ff154bf04fc89d140af65e2955a615812"
+    },
+    {
+      "relativePath": "NC.m",
+      "sha256": "27ce7c4c9c939ae7c1b55b3e34522f3a5a705933e3a6eddb365d9918073d9012"
+    },
+    {
+      "relativePath": "WA.m",
+      "sha256": "2d99c115416c8bc513b4f62013c017ec7eb9a743d7b4e411919996098f069c21"
+    },
+    {
+      "relativePath": "TC.m",
+      "sha256": "fc25c6196e2b4dfcae7c831e11604f34cccccafa34a22b19472b9792888c3ea3"
+    },
+    {
+      "relativePath": "TCH.m",
+      "sha256": "ea70cfd8e247d49c1a53cdedeac240b14ad2271f77a2f3af086f0966671f5120"
+    },
+    {
+      "relativePath": "Test_Revision_Core.m",
+      "sha256": "7e9b055b31b80828ae67ecbd1ac4012c1976fab1effd81fe478987e31ae1615f"
+    },
+    {
+      "relativePath": "run_revision_synthetic.m",
+      "sha256": "07618fb48c4282ed6fdfb0d48c2618f7cfa49d872f2f16edf1d6e8839c160711"
+    },
+    {
+      "relativePath": "run_revision_identifiability.m",
+      "sha256": "42e5876d391d6d11e311c3665364578320ff0257e4a9a5af4c44a315c0adb14a"
+    },
+    {
+      "relativePath": "Build_Synthetic_Revision_Artifacts.m",
+      "sha256": "f3f0a8587035066273387dc32a59783878e85a266862c3ca36d893b246ac3125"
+    },
+    {
+      "relativePath": "JoHFigureStyle.m",
+      "sha256": "a232f8a04c41dbce1bd8a9fc1d5edc21aa3fadd196f132cbf815b756147dd9ed"
+    },
+    {
+      "relativePath": "Draw_JoH_Graphical_Abstract.m",
+      "sha256": "5381fee9e9af5f53180ec3e2187b6525077a007ac41f0bb1ec762b824857547e"
+    },
+    {
+      "relativePath": "EeeTGEN.m",
+      "sha256": "b08d69521ffd036d48ac2deaec111524929eee945ceed31837c3957c05fc2e55"
+    },
+    {
+      "relativePath": "WA_Submitted.m",
+      "sha256": "618b5320b6925f3f8682cd95bb860c489f0b8574b7dff5010c0df6013d702866"
+    },
+    {
+      "relativePath": "Sim_TC_vs_NC.m",
+      "sha256": "f4762b81aa6b163ef4480d7d0169ca0677fe84f87d4995d64ad95402fc6b8fa7"
+    },
+    {
+      "relativePath": "Sim_TCH_vs_NC.m",
+      "sha256": "e08cafa5e297c7e023aa56368669f4310a73c6632edb2acda63af4b74b484d87"
+    },
+    {
+      "relativePath": "Test_NC_Sensitivity.m",
+      "sha256": "0a143c50383aa906538f7b1851e020732b414eddd5895ed22f28700042023d55"
+    },
+    {
+      "relativePath": "Sim_WA_Comparison.m",
+      "sha256": "add37389011e444c69f019621263c14294b639459272b501095b46f780662dec"
+    }
+  ],
+  "layout": [
+    {
+      "figure": "Sim_TC_vs_NC_results",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Sim_TCH_vs_NC_results",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Test_NC_Sensitivity_results",
+      "legends": 1,
+      "axes": 3
+    },
+    {
+      "figure": "Sim_WA_Comparison",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Figure_R1_Variance_RMSE_alpha_0",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Figure_R1_Variance_RMSE_alpha_0p3",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Figure_R2_Heldout_Merging",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Figure_R3_Stress_Feasibility_and_PSD_Cost",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Figure_R4_Initialization_and_Eigenfloor",
+      "legends": 0,
+      "axes": 2
+    },
+    {
+      "figure": "Figure_R4b_Initialization",
+      "legends": 1,
+      "axes": 2
+    },
+    {
+      "figure": "Figure_R5_Merging_Controls",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Figure_R6_Paired_Seasonal_Change",
+      "legends": 1,
+      "axes": 4
+    },
+    {
+      "figure": "Graphical_Abstract_NC",
+      "legends": 0,
+      "axes": 1
+    },
+    {
+      "figure": "FigS_NC_PSD_Diagnostic",
+      "legends": 0,
+      "axes": 4
+    }
+  ],
+  "stageStatus": [
+    "complete",
+    "complete",
+    "complete",
+    "complete",
+    "complete",
+    "complete",
+    "complete",
+    "complete",
+    "complete"
+  ],
+  "generatedFiles": [
+    "Sim_TC_vs_NC_results.png",
+    "Sim_TC_vs_NC_results.pdf",
+    "Sim_TCH_vs_NC_results.png",
+    "Sim_TCH_vs_NC_results.pdf",
+    "Test_NC_Sensitivity_results.png",
+    "Test_NC_Sensitivity_results.pdf",
+    "Sim_WA_Comparison.png",
+    "Sim_WA_Comparison.pdf",
+    "Figure_R1_Variance_RMSE_alpha_0.png",
+    "Figure_R1_Variance_RMSE_alpha_0.pdf",
+    "Figure_R1_Variance_RMSE_alpha_0p3.png",
+    "Figure_R1_Variance_RMSE_alpha_0p3.pdf",
+    "Figure_R2_Heldout_Merging.png",
+    "Figure_R2_Heldout_Merging.pdf",
+    "Figure_R3_Stress_Feasibility_and_PSD_Cost.png",
+    "Figure_R3_Stress_Feasibility_and_PSD_Cost.pdf",
+    "Figure_R4_Initialization_and_Eigenfloor.png",
+    "Figure_R4_Initialization_and_Eigenfloor.pdf",
+    "Figure_R4b_Initialization.png",
+    "Figure_R4b_Initialization.pdf",
+    "Figure_R5_Merging_Controls.png",
+    "Figure_R5_Merging_Controls.pdf",
+    "Figure_R6_Paired_Seasonal_Change.png",
+    "Figure_R6_Paired_Seasonal_Change.pdf",
+    "Graphical_Abstract_NC.png",
+    "Graphical_Abstract_NC.pdf",
+    "FigS_NC_PSD_Diagnostic.png",
+    "FigS_NC_PSD_Diagnostic.pdf"
+  ],
+  "exportSources": [
+    {
+      "file": "Export_Public_Figures.m",
+      "sha256": "63a733acc71b91ce20ca9c7dbf3bef8cca9e9b34063cdbd4bc015759aee5a106"
+    },
+    {
+      "file": "Figure_Supplementary_NC_PSD_Diagnostic.m",
+      "sha256": "0e3951af304bcbb30a67c5cd2003fe09b154337ba3c57dab62b1c96b603a8f58"
+    }
+  ]
+}

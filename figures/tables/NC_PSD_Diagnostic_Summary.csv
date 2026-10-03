@@ -1,0 +1,12 @@
+Metric,Value
+fractionRequiringPSD,0.031
+medianThetaScale,1
+medianThetaScale_corrected,0.996552210445415
+medianRelativeObjectiveIncrease,0
+medianRelativeObjectiveIncrease_corrected,0.110818278867086
+medianUbRMSE_raw,0.530653643060543
+medianUbRMSE_psd,0.530653643060543
+medianR_raw,0.805647902030354
+medianR_psd,0.804921330002288
+fractionWAValid_raw,1
+fractionWAValid_psd,1

@@ -1,0 +1,4 @@
+Theta1,Theta2,Variance1,Variance2,OffDiagonalLoss,MinEigenvalue,DecompositionResidual,UnitSumWeight1,UnitSumWeight2,FloorApplied
+0.8,1.25,1.36,0.4375,0,0.4375,0,0.243393602225313,0.756606397774687,0
+1,1,1,1,0,1,0,0.5,0.5,0
+1.25,0.8,0.4375,1.36,0,0.4375,0,0.756606397774687,0.243393602225313,0

@@ -76,6 +76,7 @@ plotObjectiveIncrease(nexttile(tl, 3), D, fontName, fontSize);
 plotValidationBeforeAfter(nexttile(tl, 4), D, fontName, fontSize);
 
 exportFigure(fig, figFld, 'FigS_NC_PSD_Diagnostic', figureDPI, exportPNG, exportPDF);
+savefig(fig, fullfile(figFld,'FigS_NC_PSD_Diagnostic.fig'));
 
 fprintf('Finished. Figure saved in:\n%s\n', figFld);
 

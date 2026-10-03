@@ -1,0 +1,17 @@
+Check,Passed,Metric
+PSD residual across 24 full/rank-deficient covariances,1,-1.64434138397022e-16
+Exact covariance decomposition across 24 cases,1,5.88196652889686e-16
+PSD correction exercised,1,12
+NC invariant to covariance unit changes 1e-20 through 1e20,1,7.82608802144629e-15
+WA invariant to covariance unit changes 1e-20 through 1e20,1,2.16653558947472e-15
+One solver step agrees with finite-difference symmetric gradient,1,1.53837014910685e-15
+Adaptive spectral shift retains a nonzero initialization,1,0.949770246889128
+SPD floor condition bound on four difficult covariances,1,100000000
+Regularized weights satisfy constrained quadratic optimality,1,3.25370575325274e-18
+Unchanged well-conditioned SPD weighted-average solution,1,1.24126707662364e-16
+Unregularized solve rejects indefinite covariance,1,1
+p=2 flagged and equally fitting PSD decompositions give different weights,1,0.707106767044412
+Zero covariance produces explicit undefined rho2 and equal-weight degeneracy,1,0
+Local random starts preserve caller RNG state,1,1
+Indefinite input repair recorded,1,0.316227766016838
+Disabling input PSD repair rejects an indefinite input,1,1

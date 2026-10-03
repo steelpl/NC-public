@@ -1,0 +1,10 @@
+Stage,Status,Seconds
+01_core_checks,complete,0.7174511
+02_legacy_TC_NC,complete,35.6818754
+03_legacy_TCH_NC,complete,137.8597916
+04_legacy_sensitivity,complete,43.6218951
+05_legacy_WA,complete,36.2343595
+06_revision_synthetic,complete,229.8226919
+07_identifiability,complete,2.9786956
+08_output_validation,complete,3.429863
+09_publication_artifacts,complete,47.0477406
