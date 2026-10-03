@@ -1,0 +1,12 @@
+# Locally generated experiment outputs and MATLAB workspaces
+results/
+figures/
+core_results/
+identifiability_results/
+*.mat
+*.fig
+*.asv
+*.log
+*.mex*
+.DS_Store
+Thumbs.db
