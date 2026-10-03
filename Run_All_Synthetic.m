@@ -62,9 +62,8 @@ try
     if opts.runLegacy
         assert(strcmpi(which('EeeTGEN'),fullfile(codeRoot,'EeeTGEN.m')), ...
             'RunAllSynthetic:ShadowedCore','Unexpected EeeTGEN selected: %s',which('EeeTGEN'));
-        assert(strcmpi(which('NC_Submitted'),fullfile(codeRoot,'NC_Submitted.m')) && ...
-            strcmpi(which('WA_Submitted'),fullfile(codeRoot,'WA_Submitted.m')), ...
-            'RunAllSynthetic:MissingBaseline','Missing or shadowed submitted-stage estimators.');
+        assert(strcmpi(which('WA_Submitted'),fullfile(codeRoot,'WA_Submitted.m')), ...
+            'RunAllSynthetic:MissingBaseline','Missing or shadowed baseline WA estimator.');
         assert(exist('boxplot','file')==2,'RunAllSynthetic:LegacyToolbox', ...
             'Legacy WA plotting needs boxplot (Statistics Toolbox). Set runLegacy=false to run the base-MATLAB revision suite.');
     end
@@ -159,7 +158,7 @@ oldDir=pwd; oldPath=path; oldRng=rng;
 guard=onCleanup(@()restoreEnvironment(oldDir,oldPath,oldRng,get(groot,'defaultFigureVisible'))); %#ok<NASGU>
 cd(root); addpath(root,'-begin');
 if strcmp(options.mode,'preflight')
-    for name={'NC','WA','NC_Submitted','WA_Submitted','TC','TCH','run_revision_synthetic','run_revision_identifiability','Build_Synthetic_Revision_Artifacts','Test_Revision_Core'}
+    for name={'NC','WA','WA_Submitted','TC','TCH','run_revision_synthetic','run_revision_identifiability','Build_Synthetic_Revision_Artifacts','Test_Revision_Core'}
         assert(strcmpi(which(name{1}),fullfile(root,[name{1} '.m'])),'Missing or shadowed %s.',name{1});
     end
     summary=struct('status','PREFLIGHT_ONLY','executionCompleted',false,'codeRoot',root);
@@ -199,7 +198,7 @@ if opts.makePublicationOutputs
         'Draw_JoH_Graphical_Abstract.m'}];
 end
 if opts.runLegacy
-    files=[files {'EeeTGEN.m','NC_Submitted.m','WA_Submitted.m','Sim_TC_vs_NC.m','Sim_TCH_vs_NC.m','Test_NC_Sensitivity.m','Sim_WA_Comparison.m'}];
+    files=[files {'EeeTGEN.m','WA_Submitted.m','Sim_TC_vs_NC.m','Sim_TCH_vs_NC.m','Test_NC_Sensitivity.m','Sim_WA_Comparison.m'}];
 end
 rows=repmat(struct('relativePath','','sourcePath','','sha256',''),numel(files),1);
 for k=1:numel(files)
@@ -220,8 +219,8 @@ effective=regexprep(source,pattern,sprintf('nMC = %d;',nMC));
 script=fullfile(folder,name); fid=fopen(script,'w','n','UTF-8'); assert(fid>=0);
 fprintf(fid,'%s',effective); fclose(fid);
 fid=fopen(fullfile(folder,'INTERPRETATION.md'),'w','n','UTF-8'); assert(fid>=0);
-fprintf(fid,['# Retained original experiment\n\nSource: %s; nMC=%d. The copied script changes only the nMC assignment. ', ...
-    'NC_Submitted/WA_Submitted reproduce the pre-revision estimators from source commit 1cb6c536. Original gain assumptions and population/in-sample ', ...
+fprintf(fid,['# Original experiment design with current NC\n\nSource: %s; nMC=%d. The copied script changes only the nMC assignment. ', ...
+    'Current NC.m (default PSD feasibility) is used; WA_Submitted retains the pre-revision WA rule. This rerun does not reproduce the pre-revision NC estimator. Original gain assumptions and population/in-sample ', ...
     'evaluation remain unchanged. This is not the independent-test, unit-gain revision experiment. ', ...
     'Legacy figures retain their original failure definition; use the revision outputs for PSD/WA diagnostics.\n'],name,nMC);
 fclose(fid);

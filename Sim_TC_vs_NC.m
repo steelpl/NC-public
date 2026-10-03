@@ -184,7 +184,7 @@ end
 function [E_TC,E_NC] = estimate_TC_NC(ExxT)
 
 [E_TC,~,~] = TC(ExxT);
-[E_NC,~,~] = NC_Submitted(ExxT);
+[E_NC,~,~] = NC(ExxT);
 
 end
 

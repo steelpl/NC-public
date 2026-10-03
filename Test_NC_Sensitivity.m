@@ -110,7 +110,7 @@ for ie = 1:nE
             [E_true,Q] = generate_covariance_system( ...
                 p,ecc,varE_all(:,k),SNR,a);
             
-            [E_NC,~,~] = NC_Submitted(Q);
+            [E_NC,~,~] = NC(Q);
             
             fail_nc(k,is,ie) = is_invalid_EeeT(E_NC,tol);
             
@@ -161,7 +161,7 @@ for ie = 1:nE
             [E_true,Q] = generate_covariance_system( ...
                 p,ecc,varE_all(:,k),SNR,a);
             
-            [E_NC,~,~] = NC_Submitted(Q);
+            [E_NC,~,~] = NC(Q);
             
             fail_nc(k,ip,ie) = is_invalid_EeeT(E_NC,tol);
             
@@ -217,7 +217,7 @@ for ie = 1:nE
             Qhat = (X' * X) / (n - 1);
             Qhat = 0.5 * (Qhat + Qhat');   % suppress numerical asymmetry
             
-            [E_NC,~,~] = NC_Submitted(Qhat);
+            [E_NC,~,~] = NC(Qhat);
             
             fail_nc(k,in,ie) = is_invalid_EeeT(E_NC,tol);
             

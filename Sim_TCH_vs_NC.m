@@ -80,7 +80,7 @@ for ie = 1:nE
             p,ecc,varE_all(:,k),SNR,a);
         
         [E_TCH,~,~] = TCH(ExxT);
-        [E_NC,~,~]  = NC_Submitted(ExxT);
+        [E_NC,~,~]  = NC(ExxT);
         
         fail_tch(k,ie) = is_invalid_EeeT(E_TCH,tol);
         fail_nc(k,ie)  = is_invalid_EeeT(E_NC,tol);
@@ -146,7 +146,7 @@ for ia = 1:nA
             p,ecc_fixed,varE_all(:,k),SNR,a);
         
         [E_TCH,~,~] = TCH(ExxT);
-        [E_NC,~,~]  = NC_Submitted(ExxT);
+        [E_NC,~,~]  = NC(ExxT);
         
         if ~is_invalid_EeeT(E_TCH,tol)
             mse_tch(k,ia) = error_variance_mse(E_TCH,E_true);

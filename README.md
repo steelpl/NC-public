@@ -42,10 +42,10 @@ The options `nMC`, `nSensitivity`, `nLegacy`, `runLegacy`, `makePublicationOutpu
 
 The integrated runner executes the following scripts in isolated stage folders and saves their workspaces and figures. They can also be run individually from a separate output working directory with the repository on the MATLAB path.
 
-- `Sim_TC_vs_NC.m`: original covariance-level TC–NC comparison; `Sim_TC_vs_NC_results.png` (original Figure 1).
-- `Sim_TCH_vs_NC.m`: original TCH–NC comparison and scaling test; `Sim_TCH_vs_NC_results.png` (original Figure 2).
-- `Test_NC_Sensitivity.m`: original SNR, product-number, and sample-length tests; `Test_NC_Sensitivity_results.png` (original Figure 3).
-- `Sim_WA_Comparison.m`: original covariance-based weighted-averaging experiment; `Sim_WA_Comparison.png` (original Figure 4).
+- `Sim_TC_vs_NC.m`: original covariance-level TC–NC comparison; `Sim_TC_vs_NC_results.png` (design corresponding to original Figure 1; current NC).
+- `Sim_TCH_vs_NC.m`: original TCH–NC comparison and scaling test; `Sim_TCH_vs_NC_results.png` (design corresponding to original Figure 2; current NC).
+- `Test_NC_Sensitivity.m`: original SNR, product-number, and sample-length tests; `Test_NC_Sensitivity_results.png` (design corresponding to original Figure 3; current NC).
+- `Sim_WA_Comparison.m`: original covariance-based weighted-averaging experiment; `Sim_WA_Comparison.png` (design corresponding to original Figure 4; current NC).
 - `run_revision_synthetic(nMC,outDir)`: the additional paired stationary/seasonal experiments with independent training/test samples, known-covariance and equal-weight controls, and raw/PSD diagnostics.
 - `run_revision_identifiability(nMC,outDir)`: exact p=2/p=3 decomposition examples and six-initialization/five-floor sensitivity tests.
 - `Build_Synthetic_Revision_Artifacts(mainDir,sensitivityDir,newOutputDir)`: generates tables and publication figures from completed CSV outputs, without fitting the models again.
@@ -53,7 +53,7 @@ The integrated runner executes the following scripts in isolated stage folders a
 - `Figure_Supplementary_NC_PSD_Diagnostic.m`: optional original synthetic-pixel PSD diagnostic; `FigS_NC_PSD_Diagnostic.png/pdf`. Its same-sample validation proxy is a numerical diagnostic, distinct from the independent-test merging analysis.
 - `Test_Revision_Core(outputDir)`: 16 numerical checks, including PSD feasibility, decomposition preservation, and weighted-averaging behavior.
 
-The original four experiments retain their original gain and covariance-level/in-sample designs and explicitly call `NC_Submitted.m` and `WA_Submitted.m`. These two baseline functions were recovered from pre-revision source commit `1cb6c536a2f67724b4d23942228a6f100c00474e` (8 July 2026); only their public function names were changed. Baseline NC uses the submitted diagonal-bound fit (`enforcePSD=false` by default), and baseline WA uses the original ridge/backslash rule. TC, TCH and the covariance generator are unchanged from that source. The WA plotting script includes a display-only correction that preserves missing groups and method colors; its numerical experiment is unchanged.
+All NC experiments call the single current `NC.m` implementation. The four covariance-level scripts retain the original experimental designs, but now use the current NC optimizer and its default residual PSD feasibility map. Their newly calculated values and figures can differ from the originally submitted Figures 1–4. For the historical pre-revision NC implementation and experiment sources, see source commit `1cb6c536a2f67724b4d23942228a6f100c00474e` (8 July 2026) in `steelpl/n-tuple-collocation`; the current file tree contains no separate submitted NC estimator. `WA_Submitted.m` remains the original ridge/backslash WA rule for the covariance-level WA comparison; additional paired experiments use current `WA.m`. TC, TCH and the covariance generator are unchanged from that source. The WA plotting script includes a display-only correction that preserves missing groups and method colors.
 
 The paired experiments call the current `NC.m`/`WA.m`, add unit-gain independent-test comparisons, and retain every attempted realization. Their numerical values answer different experimental questions and should not be interchanged with the original figures. Both estimator implementations are needed to reproduce the original and additional experimental stages without silently changing the baseline.
 

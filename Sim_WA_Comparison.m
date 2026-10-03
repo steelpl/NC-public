@@ -163,7 +163,7 @@ end
 %% ============================================================
 function E_list = estimate_covariances(ExxT)
 
-[E_NC,~,~]  = NC_Submitted(ExxT);
+[E_NC,~,~]  = NC(ExxT);
 [E_TC,~,~]  = TC(ExxT);
 [E_TCH,~,~] = TCH(ExxT);
 
