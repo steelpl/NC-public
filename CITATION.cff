@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the article in preferred-citation."
+type: software
+title: "NC-public"
+authors:
+  - family-names: Pham
+    given-names: Hung T.
+  - family-names: Kim
+    given-names: Seokhyeon
+repository-code: "https://github.com/steelpl/NC-public"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Pham
+      given-names: Hung T.
+    - family-names: Kim
+      given-names: Seokhyeon
+  title: >-
+    N-Tuple Collocation for Reference-Free Uncertainty Estimation from
+    Multi-Source Hydrological Data: Beyond Triple Collocation and
+    Three-Cornered Hat
+  journal: Journal of Hydrology
+  year: 2026
+  notes: >-
+    Accepted for publication. Volume, issue, pages/article number, and DOI
+    will be added when assigned.

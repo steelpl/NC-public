@@ -33,6 +33,7 @@ function EeeT = EeeTGEN(p,ecc,var_e)
 %     N-Tuple Collocation for Reference-Free Uncertainty Estimation from
 %     Multi-Source Hydrological Data: Beyond Triple Collocation and
 %     Three-Cornered Hat.
+%     Journal of Hydrology (accepted).
 %
 % If you use the methods presented in the paper and/or this example, 
 % please cite this paper where appropriate.

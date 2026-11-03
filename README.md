@@ -4,6 +4,12 @@ MATLAB code for **N-Tuple Collocation for Reference-Free Uncertainty Estimation 
 
 The repository includes scripts for reproducing the synthetic covariance experiments, TC–NC and TCH–NC comparisons, NC sensitivity tests, downstream weighted-averaging experiments, graphical abstract, and supplementary feasibility diagnostics. All input samples are generated internally. The repository contains the code, MATLAB-generated figure gallery and compact numeric summaries. Full experiment workspaces remain local under results/.
 
+## Citation
+
+Pham, H.T. & Kim, S. (2026). N-Tuple Collocation for Reference-Free Uncertainty Estimation from Multi-Source Hydrological Data: Beyond Triple Collocation and Three-Cornered Hat. *Journal of Hydrology* (accepted).
+
+Volume, issue, pages/article number, and DOI will be added when assigned. Machine-readable citation metadata are provided in [CITATION.cff](CITATION.cff).
+
 ## Requirements
 
 - MATLAB R2025b was used for verification. Earlier releases have not been validated.
