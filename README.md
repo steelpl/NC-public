@@ -4,6 +4,8 @@ MATLAB code for **N-Tuple Collocation for Reference-Free Uncertainty Estimation 
 
 The repository includes scripts for reproducing the synthetic covariance experiments, TC–NC and TCH–NC comparisons, NC sensitivity tests, downstream weighted-averaging experiments, graphical abstract, and supplementary feasibility diagnostics. All input samples are generated internally. The repository contains the code, MATLAB-generated figure gallery and compact numeric summaries. Full experiment workspaces remain local under results/.
 
+For direct estimation, start with [Using NC.m](#using-ncm). For the paper experiments and figure gallery, see [the full workflow](#run-the-full-experiment-workflow) and [generated figures](#generated-figure-gallery).
+
 ## Citation
 
 Pham, H.T. & Kim, S. (2026). N-Tuple Collocation for Reference-Free Uncertainty Estimation from Multi-Source Hydrological Data: Beyond Triple Collocation and Three-Cornered Hat. *Journal of Hydrology* (accepted).
@@ -17,7 +19,149 @@ Volume, issue, pages/article number, and DOI will be added when assigned. Machin
 - The four original experiment scripts require Statistics and Machine Learning Toolbox for their percentile/boxplot plotting functions.
 - No external datasets, personal paths, or network drives are required.
 
-## Start here
+## Using NC.m
+
+`NC.m` estimates an error covariance matrix from the covariance of collocated products, without requiring observations of the true signal. It can be called directly; the experiment runner is optional.
+
+```matlab
+[Ehat, thetaHat, rho2Hat, info] = NC(Q);       % default settings
+[Ehat, thetaHat, rho2Hat, info] = NC(Q, opts); % optional settings
+```
+
+### Input and a runnable example
+
+`Q` is a **finite, real, p-by-p covariance matrix**, not a matrix of time series. It should be symmetric and PSD, with nonnegative diagonal entries; input repair is described below. For observations `X`, arrange rows as matched samples and columns as products, then calculate `Q = cov(X)`. Three or more products are recommended. The code also accepts two products, for which the decomposition is underdetermined.
+
+Run this self-contained example from the repository root in MATLAB. The normal random samples are used only to construct the example; NC itself uses the covariance matrix.
+
+```matlab
+addpath(pwd,'-begin');
+rng(123);
+n = 2000;
+y = randn(n,1);                 % latent signal, known only in this example
+a = [0.8; 1.0; 1.2; 1.1];      % product gains
+L = [0.6 0   0   0; ...
+     0.2 0.7 0   0; ...
+     0.1 0.2 0.5 0; ...
+     0   0.1 0.2 0.8];
+errors = randn(n,4)*L';         % correlated errors; covariance is L*L'
+X = y*a' + errors;              % 2000 observations x 4 products
+Q = cov(X);
+
+[Ehat, thetaHat, rho2Hat, info] = NC(Q);
+errorVariance = diag(Ehat);
+errorSD = sqrt(max(errorVariance,0)); % guard against roundoff near zero
+disp(table((1:4)',errorSD,rho2Hat, ...
+    'VariableNames',{'Product','EstimatedErrorSD','EstimatedSignalR2'}));
+fprintf('Residual PSD feasible: %d; decomposition error: %.3g\n', ...
+    info.feasiblePSD,info.decompositionRelativeError);
+```
+
+The fitted values need not recover the generating covariance `L*L'` exactly: the covariance alone does not uniquely determine the physical signal/error allocation.
+
+For your own data, first align timestamps and spatial support, apply quality control, and use the same valid observations for all products:
+
+```matlab
+validRows = all(isfinite(X),2);
+Xcommon = X(validRows,:);
+assert(size(Xcommon,1)>1,'At least two common observations are required.');
+Q = cov(Xcommon);
+[Ehat, thetaHat, rho2Hat, info] = NC(Q);
+```
+
+`cov` removes the sample means. Use enough common observations to estimate a representative covariance; the two-observation assertion is only a computational minimum. Pairwise deletion can produce a covariance assembled from different samples and may make it indefinite. NC does not perform time matching, quality control, bias correction, or detrending for you.
+
+### What the outputs mean
+
+- `Ehat` (`p x p`): estimated error covariance. `diag(Ehat)` contains error variances; off-diagonal entries contain estimated error cross-covariances and can be positive or negative. Covariance units follow the input products; error SD has the corresponding product units.
+- `thetaHat` (`p x 1`): fitted signal amplitudes, combining each product's gain and the latent signal standard deviation. This is neither a recovered signal time series nor a vector of merging weights. Its overall sign is ambiguous because `thetaHat` and `-thetaHat` give the same rank-one covariance.
+- `rho2Hat` (`p x 1`): `thetaHat(i)^2 / Qused(i,i)`, the estimated squared signal correlation under the model. `Qused` is the symmetrized, possibly PSD-repaired input. A zero-variance product gives `NaN`. These values are model-based estimates, not correlations measured against an observed truth.
+- `info`: optimization, input-repair and residual-feasibility diagnostics. Inspect these alongside the estimates, as described below.
+
+## How NC works
+
+For centered products, the model is
+
+$$
+x_i = a_i y + e_i, \qquad \operatorname{Cov}(y,e_i)=0,
+$$
+
+so their covariance is decomposed as
+
+$$
+Q = \sigma_y^2 aa^{\mathsf T} + \Sigma_e
+  = \theta\theta^{\mathsf T} + \Sigma_e,
+\qquad \theta = \sigma_y a.
+$$
+
+NC selects a rank-one common-signal component and assigns the remaining covariance to the error component. The current implementation uses two stages:
+
+1. **Fit the signal component.** Minimize the absolute off-diagonal residuals with diagonal bounds:
+
+   $$
+   \min_{\theta}\ \sum_{i\ne j}|Q_{ij}-\theta_i\theta_j|,
+   \qquad |\theta_i|\leq\sqrt{Q_{ii}}.
+   $$
+
+   The bounds ensure nonnegative residual diagonal entries. The solver uses multiple spectral initializations, projected subgradient steps and a backtracking line search, retaining the lowest objective found. It stops when improvement remains below its threshold for the configured patience, or when the iteration cap is reached. This nonconvex fit has no guarantee of finding a global optimum.
+
+2. **Make the residual covariance PSD.** With `enforcePSD=true` (the default), project the fitted vector into the numerical range of `Q`, then shrink it if needed to satisfy
+
+   $$
+   \theta^{\mathsf T}Q^{\dagger}\theta \leq 1.
+   $$
+
+   Here `Q` is PSD and the dagger denotes its pseudoinverse. Together with the range condition, this makes `Ehat = Q - thetaHat*thetaHat'` PSD within numerical tolerance. A small interior margin handles floating-point roundoff. The code adjusts the signal vector rather than independently clipping the residual matrix, preserving the covariance decomposition. This step can change the L1 objective; `info` records that change.
+
+Before fitting, NC symmetrizes the input, divides it by one positive scalar for numerical conditioning, and optionally clips negative input eigenvalues to zero. Outputs are converted back to the input covariance units. This global normalization does not standardize individual products. Choose product units deliberately: rescaling one product changes the relative weighting of covariance residuals in the L1 fit. If input repair occurs, the decomposition refers to the repaired covariance, rather than the original matrix.
+
+The objective favors a small absolute off-diagonal error allocation; error cross-covariances are allowed in the residual. Interpreting the result requires a meaningful common latent signal and signal–error orthogonality. The fitted allocation is a regularized estimate: even with three or more products, correlated errors can admit multiple physically different decompositions. Numerical feasibility alone does not establish unique physical error identification or superior accuracy for every dataset.
+
+### Options and diagnostics
+
+For example, add reproducible random starts to the default spectral starts:
+
+```matlab
+opts = struct('nStarts',4,'nRandomStarts',2,'randomSeed',42,'verbose',true);
+[Ehat, thetaHat, rho2Hat, info] = NC(Q,opts);
+```
+
+Frequently used options and their defaults are:
+
+- `nStarts = min(4,p)`: requested spectral starts, capped at `p`. Zero starts are removed when nonzero starts exist, so `info.nStarts` reports the actual total used.
+- `nRandomStarts = 0`, `randomSeed = 1`: additional random starts, generated with a local random stream.
+- `maxIters = 2000`, `minIters = 20`, `patience = 30`: iteration cap, earliest stopping iteration and stagnation patience for each start.
+- `enforcePSD = true`: apply the residual PSD feasibility map. Set to `false` only for a raw diagnostic; the residual matrix can then be indefinite despite its nonnegative diagonal.
+- `repairInputPSD = true`: repair negative input eigenvalues. Setting it to `false` rejects materially indefinite input, allowing only deviations within the numerical tolerance.
+- `psdTol = 1e-10`: relative feasibility tolerance in normalized covariance units.
+- `verbose = false`: print a short fit summary when enabled.
+
+Other step-size and objective-tolerance controls are defined in the parameter block of [NC.m](NC.m). Changing numerical settings can change the selected solution.
+
+Useful diagnostics include:
+
+- `inputPSDRepaired`, `inputPSDRelativeChange`: whether and how much the input covariance changed.
+- `objectiveBeforePSD`, `objective`, `objectiveChangePSD`: off-diagonal L1 loss before and after the residual feasibility map, in the input covariance units.
+- `thetaScalePSD`, `thetaRelativeChangePSD`, `psdRepairApplied`: shrinkage and total signal-vector adjustment during that map.
+- `feasiblePSD`, `minErrorCovEigenvalue`, `decompositionRelativeError`: residual feasibility and preservation of the decomposition.
+- `startInfo`: initial/final objective, iteration count and stopping flag for each start. A `converged` flag records the stopping rule; it is not a global-optimality certificate.
+- `p2Underdetermined`, `physicalErrorIdentified`: structural interpretation flags. The latter is always `false`; NC does not certify physical error identification.
+
+### Using the estimated covariance for merging
+
+`WA.m` computes unit-sum error-covariance weights. Its inputs must be on a common unbiased signal scale; unequal product gains do not satisfy that condition automatically. For the toy example above, the gains are known, so first calibrate the products and re-estimate their error covariance on that scale:
+
+```matlab
+Xcalibrated = Xcommon ./ a';    % possible here because the toy gains are known
+[Ecalibrated,~,~,ncInfo] = NC(cov(Xcalibrated));
+[weights,waInfo] = WA(Ecalibrated);
+merged = Xcalibrated*weights;
+disp(weights);                 % sum is one; individual weights may be negative
+```
+
+For real observations, establish an appropriate calibration separately. `WA.m` applies an explicit relative eigenvalue floor (default `1e-8`) before solving for weights; a PSD covariance can still be singular and require this SPD safeguard. Inspect `waInfo.regularized`, `waInfo.relativeChange` and `waInfo.covarianceUsed`. This numerical conditioning is separate from NC's PSD feasibility map.
+
+## Run the full experiment workflow
 
 Open this folder in MATLAB and run the dependency check. A call with no arguments performs this check only:
 
@@ -117,7 +261,7 @@ The original four scripts use seed 123. The paired suite uses base seed 20260917
 
 The paired suite has 36 scenarios, 1095 training and 1095 independent test days, SNR 0.1/3/10 dB, base error correlations 0/0.4/0.99, and signal–error correlation parameters 0/0.3. Accuracy summaries are conditional on available estimates; failure rates retain attempted denominators. Pairwise contrasts use common valid realizations. Confidence intervals quantify Monte Carlo uncertainty across realizations.
 
-`NC.m` uses an off-diagonal L1 fit with diagonal bounds, followed by a PSD feasibility map by default. This is a two-stage numerical procedure, not a globally optimal joint PSD-constrained fit or proof of unique physical covariance identification. Raw NC (`enforcePSD=false`) is a diagnostic. `WA.m` applies explicit SPD conditioning consistently to compared covariance estimates. Numerical feasibility does not imply universal accuracy superiority. The supplied TCH implementation is the repository penalty-optimization variant, and its first reconstructed covariance output is used by the experiment scripts.
+The [method and diagnostic guidance above](#how-nc-works) applies throughout the experiments. The supplied TCH implementation is the repository penalty-optimization variant, and its first reconstructed covariance output is used by the experiment scripts.
 
 ## License
 
