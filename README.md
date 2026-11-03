@@ -82,34 +82,34 @@ Q = cov(Xcommon);
 
 For centered products, the model is
 
-$$
-x_i = a_i y + e_i, \qquad \operatorname{Cov}(y,e_i)=0,
-$$
+```math
+x_i = a_i y + e_i, \qquad \mathrm{Cov}(y,e_i)=0,
+```
 
 so their covariance is decomposed as
 
-$$
+```math
 Q = \sigma_y^2 aa^{\mathsf T} + \Sigma_e
   = \theta\theta^{\mathsf T} + \Sigma_e,
 \qquad \theta = \sigma_y a.
-$$
+```
 
 NC selects a rank-one common-signal component and assigns the remaining covariance to the error component. The current implementation uses two stages:
 
 1. **Fit the signal component.** Minimize the absolute off-diagonal residuals with diagonal bounds:
 
-   $$
+   ```math
    \min_{\theta}\ \sum_{i\ne j}|Q_{ij}-\theta_i\theta_j|,
    \qquad |\theta_i|\leq\sqrt{Q_{ii}}.
-   $$
+   ```
 
    The bounds ensure nonnegative residual diagonal entries. The solver uses multiple spectral initializations, projected subgradient steps and a backtracking line search, retaining the lowest objective found. It stops when improvement remains below its threshold for the configured patience, or when the iteration cap is reached. This nonconvex fit has no guarantee of finding a global optimum.
 
 2. **Make the residual covariance PSD.** With `enforcePSD=true` (the default), project the fitted vector into the numerical range of `Q`, then shrink it if needed to satisfy
 
-   $$
+   ```math
    \theta^{\mathsf T}Q^{\dagger}\theta \leq 1.
-   $$
+   ```
 
    Here `Q` is PSD and the dagger denotes its pseudoinverse. Together with the range condition, this makes `Ehat = Q - thetaHat*thetaHat'` PSD within numerical tolerance. A small interior margin handles floating-point roundoff. The code adjusts the signal vector rather than independently clipping the residual matrix, preserving the covariance decomposition. This step can change the L1 objective; `info` records that change.
 
